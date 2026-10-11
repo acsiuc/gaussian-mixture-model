@@ -28,12 +28,37 @@ class GMM:
         standard_deviation = np.std(datapoints)
         self.stds_ = np.ones(self.k_curves)*standard_deviation
 
+        for x in range(self.max_rounds):
+            current_values = self.predict_proba(datapoints=datapoints)
+            for curve in range(self.k_curves):
+                shares = current_values[:, curve]
+                self.means_[curve] = (shares*datapoints).sum() / shares.sum()
+                self.weights_[curve] = shares.sum()/len(datapoints)
+                self.stds_[curve] = np.sqrt((shares * (datapoints - self.means_[curve])**2).sum() / shares.sum())
+
+
+
+
 
 
     def predict(self, datapoints):
         pass
     def predict_proba(self, datapoints):
-        pass
+        table = np.zeros((len(datapoints), self.k_curves))
+
+        for curve in range(self.k_curves):
+            
+            table[:, curve] = self.weights_[curve] * bell_curve_height(datapoints, self.means_[curve], self.stds_[curve])
+
+        row_sums = table.sum(axis=1, keepdims = True)
+
+        return table/row_sums
+
+    
+            
+
+
+        
 
 def bell_curve_height(x, mean, std):
 
