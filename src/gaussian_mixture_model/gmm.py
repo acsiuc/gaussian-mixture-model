@@ -1,7 +1,7 @@
 import numpy as np
 
 
-class GMM():
+class GMM:
 
     k_curves: int
     tolerance: float
@@ -19,7 +19,14 @@ class GMM():
         self.max_rounds = max_rounds
 
     def fit(self, datapoints):
-        pass
+        rng = np.random.default_rng(seed = self.seed)
+        shuffle_order = rng.permutation(len(datapoints))
+        randomized_datapoints = datapoints[shuffle_order]
+
+        self.means_ = randomized_datapoints[:self.k_curves]
+
+
+
     def predict(self, datapoints):
         pass
     def predict_proba(self, datapoints):
