@@ -24,6 +24,9 @@ class GMM:
         randomized_datapoints = datapoints[shuffle_order]
 
         self.means_ = randomized_datapoints[:self.k_curves]
+        self.weights_ = np.ones(self.k_curves) / self.k_curves
+        standard_deviation = np.std(datapoints)
+        self.stds_ = np.ones(self.k_curves)*standard_deviation
 
 
 
