@@ -30,19 +30,20 @@ class GMM:
 
         for x in range(self.max_rounds):
             current_values = self.predict_proba(datapoints=datapoints)
+            old_curves = self.means_.copy()
+
             for curve in range(self.k_curves):
                 shares = current_values[:, curve]
                 self.means_[curve] = (shares*datapoints).sum() / shares.sum()
                 self.weights_[curve] = shares.sum()/len(datapoints)
                 self.stds_[curve] = np.sqrt((shares * (datapoints - self.means_[curve])**2).sum() / shares.sum())
 
-
-
-
-
+            if np.abs(self.means_ - old_curves).max() < self.tolerance:
+                break
 
     def predict(self, datapoints):
-        pass
+        return np.argmax(self.predict_proba(datapoints), axis = 1)
+
     def predict_proba(self, datapoints):
         table = np.zeros((len(datapoints), self.k_curves))
 
