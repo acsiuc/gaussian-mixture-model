@@ -34,3 +34,11 @@ class GMM:
         pass
     def predict_proba(self, datapoints):
         pass
+
+def bell_curve_height(x, mean, std):
+
+    z = (x - mean)/std
+
+    fx = 1 / (std * np.sqrt(2*np.pi)) * np.exp(-z**2/2)
+
+    return fx
